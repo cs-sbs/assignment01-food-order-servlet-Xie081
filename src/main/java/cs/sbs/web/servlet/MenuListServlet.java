@@ -35,6 +35,7 @@ public class MenuListServlet extends HttpServlet {
         }
 
         if (name.trim().isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             out.println("Error: search name cannot be empty");
             return;
         }
