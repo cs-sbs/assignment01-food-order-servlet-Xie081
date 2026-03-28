@@ -47,14 +47,17 @@ public class OrderCreateServlet extends HttpServlet {
         }
 
         // 创建订单
-        int orderId = nextId++;
-        Order order = new Order(orderId, customer, food, quantity);
-        ORDER_LIST.add(order);
+        int orderId;
+        synchronized (OrderCreateServlet.class) {
+            orderId = nextId++;
+            Order order = new Order(orderId, customer, food, quantity);
+            ORDER_LIST.add(order);
+        }
 
         out.println("Order Created: " + orderId);
     }
 
-    public static Order getOrderById(int id) {
+    public static synchronized Order getOrderById(int id) {
         for (Order o : ORDER_LIST) {
             if (o.getOrderId() == id) {
                 return o;
