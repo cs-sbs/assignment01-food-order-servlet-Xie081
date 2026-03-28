@@ -19,14 +19,14 @@ public class OrderCreateServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/plain");
+        response.setContentType("text/html; charset=UTF-8");
         PrintWriter out = response.getWriter();
 
         String customer = request.getParameter("customer");
         String food = request.getParameter("food");
         String quantityStr = request.getParameter("quantity");
 
-        // 空值判断
+        // 参数校验
         if (customer == null || customer.isBlank()
                 || food == null || food.isBlank()
                 || quantityStr == null || quantityStr.isBlank()) {
@@ -47,17 +47,14 @@ public class OrderCreateServlet extends HttpServlet {
         }
 
         // 创建订单
-        int orderId;
-        synchronized (OrderCreateServlet.class) {
-            orderId = nextId++;
-            Order order = new Order(orderId, customer, food, quantity);
-            ORDER_LIST.add(order);
-        }
+        int orderId = nextId++;
+        Order order = new Order(orderId, customer, food, quantity);
+        ORDER_LIST.add(order);
 
-        response.sendRedirect("order.html?orderId=" + orderId);
+        out.println("Order Created: <a href='/order/" + orderId + "'>" + orderId + "</a>");
     }
 
-    public static synchronized Order getOrderById(int id) {
+    public static Order getOrderById(int id) {
         for (Order o : ORDER_LIST) {
             if (o.getOrderId() == id) {
                 return o;
