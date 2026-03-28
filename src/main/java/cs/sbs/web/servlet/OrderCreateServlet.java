@@ -54,7 +54,7 @@ public class OrderCreateServlet extends HttpServlet {
             ORDER_LIST.add(order);
         }
 
-        out.println("Order Created: " + orderId);
+        response.sendRedirect("order.html?orderId=" + orderId);
     }
 
     public static synchronized Order getOrderById(int id) {
