@@ -10,26 +10,26 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class OrderCreateServlet extends HttpServlet {
 
-    private static final List<Order> ORDERS = new ArrayList<>();
-    private static final AtomicInteger NEXT_ID = new AtomicInteger(1001);
+    private static final List<Order> ORDER_LIST = new ArrayList<>();
+    private static int nextId = 1001;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html; charset=UTF-8");
+        response.setContentType("text/plain; charset=UTF-8");
         PrintWriter out = response.getWriter();
 
         String customer = request.getParameter("customer");
         String food = request.getParameter("food");
         String quantityStr = request.getParameter("quantity");
 
-        if (customer == null || customer.isBlank() ||
-                food == null || food.isBlank() ||
-                quantityStr == null || quantityStr.isBlank()) {
+        // 空值判断
+        if (customer == null || customer.isBlank()
+                || food == null || food.isBlank()
+                || quantityStr == null || quantityStr.isBlank()) {
             out.println("Error: all parameters (customer, food, quantity) are required");
             return;
         }
@@ -46,19 +46,20 @@ public class OrderCreateServlet extends HttpServlet {
             return;
         }
 
-        int orderId = NEXT_ID.getAndIncrement();
+        // 创建订单
+        int orderId = nextId++;
         Order order = new Order(orderId, customer, food, quantity);
-        ORDERS.add(order);
+        ORDER_LIST.add(order);
 
         out.println("Order Created: " + orderId);
-        out.println("<br>");
-        out.println("<a href='/order/" + orderId + "'>View Order Details</a>");
     }
 
-    public static Order findOrderById(int orderId) {
-        return ORDERS.stream()
-                .filter(o -> o.getOrderId() == orderId)
-                .findFirst()
-                .orElse(null);
+    public static Order getOrderById(int id) {
+        for (Order o : ORDER_LIST) {
+            if (o.getOrderId() == id) {
+                return o;
+            }
+        }
+        return null;
     }
 }

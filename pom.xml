@@ -16,7 +16,6 @@
     </properties>
 
     <dependencies>
-        <!-- 正确的 Servlet 依赖 -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>

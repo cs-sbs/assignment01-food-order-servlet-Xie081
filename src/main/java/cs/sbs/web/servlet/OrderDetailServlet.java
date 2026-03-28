@@ -18,7 +18,7 @@ public class OrderDetailServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         String path = request.getPathInfo();
-        if (path == null || path.length() <= 1) {
+        if (path == null || path.equals("/")) {
             out.println("Error: order ID required");
             return;
         }
@@ -31,7 +31,7 @@ public class OrderDetailServlet extends HttpServlet {
             return;
         }
 
-        Order order = OrderCreateServlet.findOrderById(orderId);
+        Order order = OrderCreateServlet.getOrderById(orderId);
         if (order == null) {
             out.println("Error: order not found");
             return;

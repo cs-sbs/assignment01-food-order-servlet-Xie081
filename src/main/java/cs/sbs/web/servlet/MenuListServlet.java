@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MenuListServlet extends HttpServlet {
 
@@ -30,20 +29,30 @@ public class MenuListServlet extends HttpServlet {
 
         String name = request.getParameter("name");
 
-        // 修复：空搜索必须返回错误
-        if (name == null || name.isBlank()) {
+        if (name == null) {
+            printMenu(MENU, out);
+            return;
+        }
+
+        if (name.trim().isEmpty()) {
             out.println("Error: search name cannot be empty");
             return;
         }
 
-        List<MenuItem> result = MENU.stream()
-                .filter(item -> item.getName().toLowerCase().contains(name.toLowerCase()))
-                .collect(Collectors.toList());
+        List<MenuItem> result = new ArrayList<>();
+        for (MenuItem item : MENU) {
+            if (item.getName().toLowerCase().contains(name.toLowerCase())) {
+                result.add(item);
+            }
+        }
+        printMenu(result, out);
+    }
 
+    private void printMenu(List<MenuItem> menu, PrintWriter out) {
         out.println("Menu List:");
         out.println();
-        for (int i = 0; i < result.size(); i++) {
-            MenuItem item = result.get(i);
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.get(i);
             out.println((i + 1) + ". " + item.getName() + " - $" + item.getPrice());
         }
     }
