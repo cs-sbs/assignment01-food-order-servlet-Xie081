@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>food-order-servlet-assignment</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-SNAPOTSHOT</version>
     <packaging>war</packaging>
 
     <properties>
@@ -16,7 +16,7 @@
     </properties>
 
     <dependencies>
-        <!-- Servlet API -->
+        <!-- 正确的 Servlet 依赖 -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -27,11 +27,6 @@
 
     <build>
         <plugins>
-            <!--
-                Note: The original tutorial specified tomcat7-maven-plugin, but it does not support Jakarta EE 9/10 (Servlet 5.0/6.0).
-                We use jetty-maven-plugin (version 11+) which supports Jakarta EE 10.
-                Run with: mvn jetty:run
-            -->
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
@@ -47,5 +42,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
