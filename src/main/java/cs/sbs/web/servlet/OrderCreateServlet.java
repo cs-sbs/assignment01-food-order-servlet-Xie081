@@ -20,7 +20,7 @@ public class OrderCreateServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html" +"; charset=UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
         PrintWriter out = response.getWriter();
 
         String customer = request.getParameter("customer");
@@ -42,7 +42,7 @@ public class OrderCreateServlet extends HttpServlet {
                 return;
             }
         } catch (NumberFormatException e) {
-            out.println("Error: invalid quantity");
+            out.println("Error: quantity must be a valid number");
             return;
         }
 
@@ -51,7 +51,8 @@ public class OrderCreateServlet extends HttpServlet {
         ORDERS.add(order);
 
         out.println("Order Created: " + orderId);
-        out.println("<a href='/order/" + orderId + "'>Order #" + orderId + " (Click to view details)</a>");
+        out.println("<br>");
+        out.println("<a href='/order/" + orderId + "'>View Order Details</a>");
     }
 
     public static Order findOrderById(int orderId) {
