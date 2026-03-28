@@ -50,6 +50,11 @@ public class MenuListServlet extends HttpServlet {
     }
 
     private void printMenu(List<MenuItem> menu, PrintWriter out) {
+        if (menu.isEmpty()) {
+            out.println("No items found");
+            return;
+        }
+
         out.println("Menu List:");
         out.println();
         for (int i = 0; i < menu.size(); i++) {

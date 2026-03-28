@@ -19,7 +19,7 @@ public class OrderCreateServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/plain; charset=UTF-8");
+        response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
 
         String customer = request.getParameter("customer");
