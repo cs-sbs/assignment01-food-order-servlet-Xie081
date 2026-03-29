@@ -15,11 +15,19 @@ public class OrderCreateServlet extends HttpServlet {
 
     private static final List<Order> ORDER_LIST = new ArrayList<>();
     private static int nextId = 1001;
+    private static final Object LOCK = new Object();
+
+    static {
+        synchronized (LOCK) {
+            ORDER_LIST.clear();
+            nextId = 1001;
+        }
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html; charset=UTF-8");
+        response.setContentType("text/plain; charset=UTF-8");
         PrintWriter out = response.getWriter();
 
         String customer = request.getParameter("customer");
@@ -46,20 +54,24 @@ public class OrderCreateServlet extends HttpServlet {
             return;
         }
 
-        // 创建订单
-        int orderId = nextId++;
-        Order order = new Order(orderId, customer, food, quantity);
-        ORDER_LIST.add(order);
+        int orderId;
+        synchronized (LOCK) {
+            orderId = nextId++;
+            Order order = new Order(orderId, customer, food, quantity);
+            ORDER_LIST.add(order);
+        }
 
-        out.println("Order Created: <a href='/order/" + orderId + "'>" + orderId + "</a>");
+        out.println("Order Created: " + orderId);
     }
 
     public static Order getOrderById(int id) {
-        for (Order o : ORDER_LIST) {
-            if (o.getOrderId() == id) {
-                return o;
+        synchronized (LOCK) {
+            for (Order o : ORDER_LIST) {
+                if (o.getOrderId() == id) {
+                    return o;
+                }
             }
+            return null;
         }
-        return null;
     }
 }

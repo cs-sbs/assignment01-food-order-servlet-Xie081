@@ -36,6 +36,7 @@ public class OrderDetailServlet extends HttpServlet {
             return;
         }
 
+        // 输出订单详情
         out.println("Order Details:");
         out.println("ID: " + order.getOrderId());
         out.println("Customer: " + order.getCustomer());
