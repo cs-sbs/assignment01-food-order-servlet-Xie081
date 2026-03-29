@@ -1,14 +1,46 @@
 package cs.sbs.web.servlet;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import cs.sbs.web.model.Order;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class OrderDetailServlet extends HttpServlet {
-
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/plain; charset=UTF-8");
+        PrintWriter out = response.getWriter();
 
-        resp.getWriter().println("TODO: order detail");
+        String pathInfo = request.getPathInfo();
+        if (pathInfo == null || pathInfo.length() <= 1) {
+            out.println("Error: invalid order ID");
+            return;
+        }
+
+        int orderId;
+        try {
+            orderId = Integer.parseInt(pathInfo.substring(1));
+        } catch (NumberFormatException e) {
+            out.println("Error: invalid order ID format");
+            return;
+        }
+
+        Order order = OrderCreateServlet.getOrderById(orderId);
+        if (order == null) {
+            out.println("Error: order not found");
+            return;
+        }
+
+        // 输出订单详情
+        out.println("Order Details:");
+        out.println("ID: " + order.getOrderId());
+        out.println("Customer: " + order.getCustomer());
+        out.println("Food: " + order.getFood());
+        out.println("Quantity: " + order.getQuantity());
     }
 }
